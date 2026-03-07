@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070f1a">
+  <meta name="robots" content="noindex, nofollow">
+  <title>MRK Foods — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INLINE PASSWORD GATE — runs BEFORE anything else.
+       Change ADMIN_USER and ADMIN_PASS below to your credentials.
+       This is inside admin.html so it CANNOT be removed by mistake.
+  ═══════════════════════════════════════════════════════════ -->
+  <script>
+    /* ── YOUR CREDENTIALS — change these ── */
+    var ADMIN_USER = 'mrk';
+    var ADMIN_PASS = 'MRK@2026';
+
+    /* Check session immediately — runs before page renders */
+    (function() {
+      if (sessionStorage.getItem('mrk_auth') !== '1') {
+        /* Not logged in — will show gate on DOMContentLoaded */
+        document.addEventListener('DOMContentLoaded', function() {
+          document.getElementById('adminGate').style.display = 'flex';
+          document.getElementById('adminWrap').style.display = 'none';
+          var inp = document.getElementById('gwPass');
+          if (inp) setTimeout(function(){ inp.focus(); }, 100);
+        });
+      }
+    })();
+
+    function gwLogin() {
+      var u = (document.getElementById('gwUser')||{value:''}).value.trim();
+      var p = (document.getElementById('gwPass')||{value:''}).value;
+      var err = document.getElementById('gwErr');
+      if (u === ADMIN_USER && p === ADMIN_PASS) {
+        sessionStorage.setItem('mrk_auth', '1');
+        document.getElementById('adminGate').style.display = 'none';
+        document.getElementById('adminWrap').style.display = 'block';
+        if (err) err.style.display = 'none';
+      } else {
+        if (err) err.style.display = 'block';
+        var pp = document.getElementById('gwPass');
+        if (pp) { pp.value = ''; pp.focus(); }
+        var uu = document.getElementById('gwUser');
+        if (uu && u !== ADMIN_USER) { uu.style.borderColor='rgba(239,68,68,.6)'; setTimeout(function(){uu.style.borderColor='';},1600); }
+        if (pp) { pp.style.borderColor='rgba(239,68,68,.6)'; setTimeout(function(){pp.style.borderColor='';},1600); }
+      }
+    }
+
+    function gwLogout() {
+      sessionStorage.removeItem('mrk_auth');
+      window.location.reload();
+    }
+
+    function gwEnter(e) {
+      if (e.key === 'Enter') gwLogin();
+    }
+  </script>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-mesh" aria-hidden="true">
+  <div class="mesh-blob blob-1"></div>
+  <div class="mesh-blob blob-2"></div>
+  <div class="mesh-blob blob-3"></div>
+</div>
+<div class="dot-grid" aria-hidden="true"></div>
+
+<!-- Page Loader -->
+<div id="pageLoader" class="page-loader">
+  <div class="loader-ring"></div>
+  <p class="loader-txt">Loading…</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PASSWORD GATE — fullscreen overlay, shown by default
+     Hides only when correct username + password entered above
+═══════════════════════════════════════════════════════════ -->
+<div id="adminGate" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:#070f1a;padding:20px">
+  <div style="background:linear-gradient(160deg,#101f31,#0b1623);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:42px 30px 34px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.85);text-align:center">
+
+    <!-- Logo -->
+    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#8b1a1a,#c9a84c);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;color:#fff;margin:0 auto 22px">M</div>
+
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;color:#fff;margin:0 0 6px">Admin Login</h2>
+    <p style="font-size:.8rem;color:#8899b0;margin:0 0 30px">MRK Foods · Manager Control Panel</p>
+
+    <!-- Username -->
+    <div style="text-align:left;margin-bottom:14px">
+      <label style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8899b0;display:block;margin-bottom:7px">Username</label>
+      <input type="text" id="gwUser" placeholder="Enter username" autocomplete="username"
+        style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 15px;color:#e8edf5;font-size:.93rem;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box"
+        onkeydown="gwEnter(event)">
+    </div>
+
+    <!-- Password -->
+    <div style="text-align:left;margin-bottom:10px">
+      <label style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8899b0;display:block;margin-bottom:7px">Password</label>
+      <input type="password" id="gwPass" placeholder="Enter password" autocomplete="current-password"
+        style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 15px;color:#e8edf5;font-size:.93rem;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box"
+        onkeydown="gwEnter(event)">
+    </div>
+
+    <!-- Error -->
+    <p id="gwErr" style="display:none;color:#fca5a5;font-size:.82rem;margin:8px 0 12px;text-align:left">❌ Incorrect username or password.</p>
+
+    <!-- Login Button -->
+    <button onclick="gwLogin()"
+      style="width:100%;padding:15px;background:linear-gradient(135deg,#8b1a1a,#a52020);border:none;border-radius:10px;color:#fff;font-size:.95rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;margin-top:8px;letter-spacing:.02em">
+      🔐 Login to Admin Panel
+    </button>
+
+    <p style="margin-top:20px;font-size:.73rem;color:#4a5a72">
+      <a href="index.html" style="color:#c9a84c;text-decoration:none">← Back to Customer Page</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ADMIN PANEL — hidden until login succeeds
+═══════════════════════════════════════════════════════════ -->
+<div id="adminWrap">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <div class="logo-icon">M</div>
+        <div>
+          <p class="logo-name">MRK Foods</p>
+          <p class="logo-sub">Admin Panel</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="horeca-badge"><span class="horeca-dot"></span>Admin Mode</div>
+        <a href="index.html" target="_blank" class="btn btn-ghost btn-sm">← Live Page</a>
+        <button class="btn btn-ghost btn-sm" onclick="gwLogout()" style="color:#fca5a5">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Admin Wrap -->
+  <div class="admin-wrap">
+
+    <!-- Page Title -->
+    <div class="admin-header">
+      <h1 class="admin-title">Manager <span>Control Panel</span></h1>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="stat-chip">
+          <span>👥</span>
+          <span><strong id="adminCount">0</strong> Managers</span>
+        </div>
+        <a href="index.html" target="_blank" class="btn btn-ghost btn-sm">View Live Page ↗</a>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs" role="tablist">
+      <button class="tab-btn active" id="tabManagers" role="tab" onclick="switchTab('managers')">
+        👥 <span>Managers</span> <span class="count-badge" id="tabCount">0</span>
+      </button>
+      <button class="tab-btn" id="tabAdd" role="tab" onclick="switchTab('add')">
+        ➕ <span>Add Manager</span>
+      </button>
+      <button class="tab-btn" id="tabQR" role="tab" onclick="switchTab('qr')">
+        📱 <span>QR Code</span>
+      </button>
+    </div>
+
+    <!-- ── TAB 1: MANAGERS LIST ── -->
+    <div class="tab-panel active" id="panelManagers">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">👥 All Managers</span>
+          <div class="search-box" style="width:220px">
+            <span class="search-ico">🔍</span>
+            <input type="search" id="adminSearch" class="search-input"
+              style="padding:9px 36px 9px 38px;font-size:.8rem" placeholder="Search…"
+              oninput="renderAdminList()">
+          </div>
+        </div>
+        <div id="adminList" class="mgr-list"></div>
+      </div>
+      <div style="text-align:right;margin-top:10px">
+        <button class="btn btn-ghost btn-sm" onclick="exportJSON()">📥 Export managers.json</button>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: ADD MANAGER ── -->
+    <div class="tab-panel" id="panelAdd">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">➕ Add New Manager</span>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">City Name *</label>
+              <input type="text" id="addCity" class="form-input" placeholder="e.g. Pune">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Manager Name *</label>
+              <input type="text" id="addName" class="form-input" placeholder="e.g. Rajesh Patil">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Digital Card URL *</label>
+              <input type="url" id="addCard" class="form-input" placeholder="https://vcard-mrkfoods-mrk.vercel.app/card.html?id=...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile Number</label>
+              <input type="tel" id="addMobile" class="form-input" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Number</label>
+              <input type="tel" id="addWhatsapp" class="form-input" placeholder="919876543210">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" id="addEmail" class="form-input" placeholder="manager@mrkfoods.in">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="addStatus" class="form-input" style="cursor:pointer">
+                <option value="true">✅ Available</option>
+                <option value="false">⏳ Coming Soon</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div id="addPreview" style="display:none;margin-bottom:16px">
+            <p class="form-label" style="margin-bottom:8px">Preview</p>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px">
+              <div id="previewAvatar" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:#e8c86d;background:linear-gradient(135deg,#0b1623,#1a2d47);flex-shrink:0">??</div>
+              <div>
+                <p id="previewName" style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:#fff">Manager Name</p>
+                <p id="previewCity" style="font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c9a84c;margin:2px 0">City</p>
+                <p style="font-size:.7rem;color:#8899b0">City Sales Manager · MRK Foods</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-ghost" onclick="clearAddForm()">✕ Clear</button>
+            <button class="btn btn-maroon" onclick="addManager()">✅ Add Manager</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 3: QR CODE ── -->
+    <div class="tab-panel" id="panelQR">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">📱 QR Code Generator</span>
+        </div>
+        <div class="panel-body">
+          <p style="font-size:.85rem;color:var(--text-sub);margin-bottom:20px;line-height:1.65">
+            One QR code links to your live landing page showing <strong style="color:var(--gold2)">all managers</strong>.
+            Print it on brochures, banners or visiting cards. When you update managers and push to GitHub,
+            customers scanning the same QR always see the latest list — <strong style="color:#fff">no need to reprint.</strong>
+          </p>
+          <div class="qr-box">
+            <div class="qr-url-wrap">
+              <div style="flex:1">
+                <label class="form-label" style="margin-bottom:6px;display:block">Landing Page URL</label>
+                <input type="url" id="qrUrl" class="qr-url-input" placeholder="https://qr-code-sand-sigma.vercel.app">
+              </div>
+              <button class="btn btn-gold" onclick="generateQR()" style="flex-shrink:0;align-self:flex-end">📱 Generate QR</button>
+            </div>
+            <div class="qr-preview" id="qrPreview">
+              <div class="qr-placeholder">
+                <p class="qr-placeholder-icon">📱</p>
+                <p>Enter your URL above → Click Generate</p>
+              </div>
+            </div>
+            <div class="qr-actions" id="qrActions" style="display:none">
+              <button class="btn btn-gold"  onclick="downloadQR()">⬇️ Download PNG</button>
+              <button class="btn btn-ghost" onclick="copyQrUrl()">🔗 Copy URL</button>
+              <button class="btn btn-ghost" onclick="printQR()">🖨️ Print QR</button>
+            </div>
+            <p class="qr-note">💡 QR never changes — just update managers and push to GitHub. Customers always see the latest data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /admin-wrap -->
+</div><!-- /adminWrap -->
+
+<!-- Edit Modal -->
+<div class="edit-modal-back" id="editBack"></div>
+<div class="edit-modal" id="editModal" role="dialog" aria-modal="true">
+  <div class="edit-modal-inner">
+    <p class="edit-modal-title">✏️ Edit Manager</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">City Name *</label>
+        <input type="text" id="editCity" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Manager Name *</label>
+        <input type="text" id="editName" class="form-input">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Digital Card URL *</label>
+        <input type="url" id="editCard" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <input type="tel" id="editMobile" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp Number</label>
+        <input type="tel" id="editWhatsapp" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="editEmail" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select id="editStatus" class="form-input" style="cursor:pointer">
+          <option value="true">✅ Available</option>
+          <option value="false">⏳ Coming Soon</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions" style="margin-top:8px">
+      <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-maroon" onclick="saveEdit()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete -->
+<div class="confirm-back" id="confirmBack"></div>
+<div class="confirm-box" id="confirmBox" role="alertdialog">
+  <div class="confirm-inner">
+    <p class="confirm-icon">🗑️</p>
+    <p class="confirm-title">Delete Manager?</p>
+    <p class="confirm-txt" id="confirmTxt">This cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmYes">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
