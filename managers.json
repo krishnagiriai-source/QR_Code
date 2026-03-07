@@ -13,7 +13,7 @@
     "id": "mgr_2",
     "city": "Hyderabad",
     "manager": "Arun Kumar Naliya",
-    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=L7O26WxeA8pRMHFlhvGn",
+    "card": "https://mrkfoods.vercel.app/card/arun",
     "mobile": "+919876543210",
     "whatsapp": "919876543210",
     "email": "arun@mrkfoods.in",
@@ -23,7 +23,7 @@
     "id": "mgr_3",
     "city": "Delhi",
     "manager": "Vijay Vijarajan",
-    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=J1Yh3B4KC8zoQHU7jgtI",
+    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=J1Yh3B4KC8",
     "mobile": "+919820595083",
     "whatsapp": "919820595083",
     "email": "northindia@mrkfoods.in",
@@ -33,10 +33,20 @@
     "id": "mgr_4",
     "city": "Jaipur",
     "manager": "Rohit Gaikwad",
-    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=DQNE2eZd3KFk4hXI8EOH",
+    "card": "https://mrkfoods.vercel.app/card/rohit",
     "mobile": "+919988776655",
     "whatsapp": "919988776655",
     "email": "rohit@mrkfoods.in",
+    "available": true
+  },
+  {
+    "id": "mgr_1772882150668_nlee",
+    "city": "Mumbai",
+    "manager": "Krishnadev Giri",
+    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=nqeotLTwrgkLdNrIVew1",
+    "mobile": "+9181708716260",
+    "whatsapp": "+9181708716260",
+    "email": "it01@mrkfoods.in",
     "available": true
   }
 ]
