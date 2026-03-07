@@ -25,9 +25,10 @@ const GRADS = [
 function binUrl()     { return `https://api.jsonbin.io/v3/b/${CONFIG.BIN_ID}`; }
 function binHeaders() {
   return {
-    'Content-Type':  'application/json',
-    'X-Master-Key':  CONFIG.API_KEY,
-    'X-Bin-Versioning': 'false'   // always overwrite latest, no version history needed
+    'Content-Type':     'application/json',
+    'X-Master-Key':     CONFIG.API_KEY,
+    'X-Access-Key':     CONFIG.API_KEY,
+    'X-Bin-Versioning': 'false'
   };
 }
 
