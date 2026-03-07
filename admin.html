@@ -13,6 +13,17 @@
 </head>
 <body>
 
+<script>
+const ADMIN_PASSWORD = "MRKadmin123";
+
+const enteredPassword = prompt("Enter Admin Password");
+
+if (enteredPassword !== ADMIN_PASSWORD) {
+  alert("Access Denied");
+  window.location.href = "index.html";
+}
+</script>
+
 <!-- ── Background ── -->
 <div class="bg-mesh" aria-hidden="true">
   <div class="mesh-blob blob-1"></div>
