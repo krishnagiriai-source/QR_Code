@@ -14,6 +14,23 @@
 /* ─── Constants ─── */
 const STORAGE_KEY = 'mrk_managers_v2';
 
+/* ─── Admin password — change this to your own password ─── */
+const ADMIN_PASSWORD = 'MRK@2026';
+
+/* ─── Auto-download managers.json after every change ──────
+   On Vercel (static hosting) files can't be written server-side.
+   This downloads managers.json automatically so you just drag-and-drop
+   it onto GitHub → Vercel redeploys → customers see it in ~30 seconds. ── */
+function autoExportJSON() {
+  const managers = loadManagersLocal();
+  const blob = new Blob([JSON.stringify(managers, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'managers.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
 const SEED_DATA = [
   { id:'mgr_1', city:'Mumbai',    manager:'Suraj Jadhav',      card:'https://vcard-mrkfoods-mrk.vercel.app/card.html?id=BqXvcZ0B2Rn7RAYZIIqY', mobile:'+918833505114', whatsapp:'918833505114', email:'suraj@mrkfoods.in',       available:true },
   { id:'mgr_2', city:'Hyderabad', manager:'Arun Kumar Naliya', card:'https://mrkfoods.vercel.app/card/arun',  mobile:'+919876543210', whatsapp:'919876543210', email:'arun@mrkfoods.in',        available:true },
@@ -285,7 +302,8 @@ function addManager() {
   managers.push({id:generateId(),city,manager:name,card,mobile,whatsapp,email,available});
   saveManagers(managers);
   clearAddForm(); renderAdminList();
-  showToast('✅ '+name+' added! Remember to Export JSON → push to GitHub.','success');
+  autoExportJSON();
+  showToast('✅ '+name+' added! managers.json auto-downloaded → upload to GitHub to go live.','success',4000);
   switchTab('managers');
 }
 
@@ -313,7 +331,8 @@ function clearAddForm() {
 function toggleAvail(id) {
   const managers=loadManagersLocal(), mgr=managers.find(m=>m.id===id); if(!mgr) return;
   mgr.available=!mgr.available; saveManagers(managers); renderAdminList();
-  showToast(mgr.manager+' marked as '+(mgr.available?'Available':'Unavailable')+'. Export JSON → push to GitHub.','success');
+  autoExportJSON();
+  showToast(mgr.manager+' → '+(mgr.available?'✅ Available':'⏳ Coming Soon')+'. managers.json auto-downloaded → upload to GitHub.','success',3500);
 }
 
 /* Edit modal */
@@ -346,7 +365,8 @@ function saveEdit() {
   const managers=loadManagersLocal(), idx=managers.findIndex(m=>m.id===editingId); if(idx<0) return;
   managers[idx]={...managers[idx],city,manager:name,card,mobile,whatsapp,email,available};
   saveManagers(managers); renderAdminList(); closeEditModal();
-  showToast('✅ '+name+' updated! Now Export JSON → push to GitHub to go live.','success');
+  autoExportJSON();
+  showToast('✅ '+name+' updated! managers.json auto-downloaded → upload to GitHub to go live.','success',4000);
 }
 
 /* Delete */
@@ -429,7 +449,8 @@ function wireAdminEvents() {
     if(!deleteId) return;
     saveManagers(loadManagersLocal().filter(m=>m.id!==deleteId));
     renderAdminList(); closeConfirm();
-    showToast('🗑️ Deleted. Export JSON → push to GitHub.','error');
+    autoExportJSON();
+    showToast('🗑️ Deleted. managers.json auto-downloaded → upload to GitHub.','error',4000);
   });
   const cb=document.getElementById('confirmBack'); if(cb) cb.addEventListener('click',closeConfirm);
   const eb=document.getElementById('editBack');    if(eb) eb.addEventListener('click',closeEditModal);
@@ -446,7 +467,10 @@ document.addEventListener('keydown',e=>{
 /* ─── Router ─── */
 function isAdminPage() { return window.location.pathname.toLowerCase().includes('admin')||(document.title||'').toLowerCase().includes('admin'); }
 
-function initAdmin() {
+/* Called after password is verified */
+function openAdminContent() {
+  const content = document.getElementById('adminContent');
+  if (content) content.style.display = 'block';
   renderAdminList();
   wireAdminEvents();
   initAddPreview();
@@ -457,6 +481,40 @@ function initAdmin() {
     if(!isLocal) qrUrlEl.value=window.location.origin+'/index.html';
   }
   hideLoader();
+}
+
+/* Password gate check — called by button onclick in admin.html */
+function checkPassword() {
+  const inp = document.getElementById('pwInput');
+  const err = document.getElementById('pwError');
+  if (!inp) return;
+  if (inp.value === ADMIN_PASSWORD) {
+    sessionStorage.setItem('mrk_admin_ok', '1');
+    document.getElementById('passwordGate').style.display = 'none';
+    if (err) err.style.display = 'none';
+    openAdminContent();
+  } else {
+    if (err) err.style.display = 'block';
+    inp.value = '';
+    inp.focus();
+    inp.style.borderColor = 'rgba(239,68,68,.6)';
+    setTimeout(() => { inp.style.borderColor = ''; }, 1600);
+  }
+}
+
+function initAdmin() {
+  /* Show password gate first, unless already authenticated this session */
+  if (sessionStorage.getItem('mrk_admin_ok') === '1') {
+    /* Already logged in — go straight to admin */
+    openAdminContent();
+  } else {
+    /* Show gate */
+    const gate = document.getElementById('passwordGate');
+    if (gate) { gate.style.display = 'flex'; }
+    hideLoader();
+    /* Focus password field after short delay */
+    setTimeout(() => { const inp = document.getElementById('pwInput'); if(inp) inp.focus(); }, 200);
+  }
 }
 
 function boot() { if(isAdminPage()) initAdmin(); else initLanding(); }
