@@ -27,6 +27,34 @@
   <p class="loader-txt">Loading…</p>
 </div>
 
+<!-- ═══ PASSWORD GATE ═══════════════════════════════════════════
+     Shown on load. Hides until correct password entered.
+     Password is set in script.js → ADMIN_PASSWORD constant.
+═══════════════════════════════════════════════════════════════ -->
+<div id="passwordGate" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;background:#070f1a;padding:20px">
+  <div style="background:linear-gradient(160deg,#101f31,#0b1623);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:40px 28px 32px;width:100%;max-width:380px;box-shadow:0 24px 80px rgba(0,0,0,.75);text-align:center">
+    <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#8b1a1a,#c9a84c);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.7rem;font-weight:700;color:#fff;margin:0 auto 20px">M</div>
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:700;color:#fff;margin:0 0 6px">Admin Access</h2>
+    <p style="font-size:.78rem;color:#8899b0;margin:0 0 26px">MRK Foods · Manager Control Panel</p>
+    <div style="text-align:left;margin-bottom:8px">
+      <label style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8899b0;display:block;margin-bottom:7px">Password</label>
+      <input type="password" id="pwInput" placeholder="Enter admin password"
+        style="width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:13px 14px;color:#e8edf5;font-size:.9rem;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box"
+        onkeydown="if(event.key==='Enter')checkPassword()">
+    </div>
+    <p id="pwError" style="color:#fca5a5;font-size:.8rem;margin:8px 0 14px;display:none">❌ Incorrect password. Try again.</p>
+    <button onclick="checkPassword()"
+      style="width:100%;padding:14px;background:linear-gradient(135deg,#8b1a1a,#a52020);border:none;border-radius:10px;color:#fff;font-size:.92rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;margin-top:4px">
+      🔐 Enter Admin Panel
+    </button>
+    <p style="margin-top:18px;font-size:.72rem;color:#4a5a72">
+      <a href="index.html" style="color:#c9a84c;text-decoration:none">← Back to Customer Page</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══ ADMIN CONTENT (hidden until password correct) ═══ -->
+<div id="adminContent" style="display:none">
 <!-- ── Header ── -->
 <header class="site-header">
   <div class="header-inner">
@@ -333,5 +361,6 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script src="script.js"></script>
+</div><!-- /adminContent -->
 </body>
 </html>
