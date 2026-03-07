@@ -21,18 +21,18 @@
     var ADMIN_USER = 'mrk';
     var ADMIN_PASS = 'MRK@2026';
 
-    /* Check session immediately — runs before page renders */
-    (function() {
-      if (sessionStorage.getItem('mrk_auth') !== '1') {
-        /* Not logged in — will show gate on DOMContentLoaded */
-        document.addEventListener('DOMContentLoaded', function() {
-          document.getElementById('adminGate').style.display = 'flex';
-          document.getElementById('adminWrap').style.display = 'none';
-          var inp = document.getElementById('gwPass');
-          if (inp) setTimeout(function(){ inp.focus(); }, 100);
-        });
+    /* Session check — hide gate if already authenticated */
+    document.addEventListener('DOMContentLoaded', function() {
+      if (sessionStorage.getItem('mrk_auth') === '1') {
+        /* Already logged in this session — skip gate */
+        document.getElementById('adminGate').style.display = 'none';
+        document.getElementById('adminWrap').style.display = 'block';
+      } else {
+        /* Gate is already visible (display:flex in HTML) — just focus input */
+        var inp = document.getElementById('gwPass');
+        if (inp) setTimeout(function(){ inp.focus(); }, 80);
       }
-    })();
+    });
 
     function gwLogin() {
       var u = (document.getElementById('gwUser')||{value:''}).value.trim();
@@ -83,7 +83,7 @@
      PASSWORD GATE — fullscreen overlay, shown by default
      Hides only when correct username + password entered above
 ═══════════════════════════════════════════════════════════ -->
-<div id="adminGate" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:#070f1a;padding:20px">
+<div id="adminGate" style="display:flex;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:#070f1a;padding:20px">
   <div style="background:linear-gradient(160deg,#101f31,#0b1623);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:42px 30px 34px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.85);text-align:center">
 
     <!-- Logo -->
@@ -126,7 +126,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      ADMIN PANEL — hidden until login succeeds
 ═══════════════════════════════════════════════════════════ -->
-<div id="adminWrap">
+<div id="adminWrap" style="display:none">
 
   <!-- Header -->
   <header class="site-header">
