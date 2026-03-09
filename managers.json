@@ -1,31 +1,21 @@
 [
   {
-    "id": "mgr_1",
-    "city": "Mumbai",
-    "manager": "Suraj Jadhav",
-    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=BqXvcZ0B2Rn7RAYZIIqY",
-    "mobile": "+918833505114",
-    "whatsapp": "918833505114",
-    "email": "suraj@mrkfoods.in",
-    "available": true
-  },
-  {
     "id": "mgr_2",
     "city": "Hyderabad",
     "manager": "Arun Kumar Naliya",
     "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=L7O26WxeA8pRMHFlhvGn",
-    "mobile": "+919876543210",
-    "whatsapp": "919876543210",
-    "email": "arun@mrkfoods.in",
+    "mobile": "+919594723981",
+    "whatsapp": "+919594723981",
+    "email": "arunkumar.n@mrkfoods.in",
     "available": true
   },
   {
     "id": "mgr_3",
     "city": "Delhi",
     "manager": "Vijay Vijarajan",
-    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=J1Yh3B4KC8zoQHU7jgtI",
-    "mobile": "+919820595083",
-    "whatsapp": "919820595083",
+    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=J1Yh3B4KC8",
+    "mobile": "+919888655521",
+    "whatsapp": "+919888655521",
     "email": "northindia@mrkfoods.in",
     "available": true
   },
@@ -33,10 +23,20 @@
     "id": "mgr_4",
     "city": "Jaipur",
     "manager": "Rohit Gaikwad",
-    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=DQNE2eZd3KFk4hXI8EOH",
-    "mobile": "+919988776655",
-    "whatsapp": "919988776655",
-    "email": "rohit@mrkfoods.in",
+    "card": "https://mrkfoods.vercel.app/card/rohit",
+    "mobile": "+919004083384",
+    "whatsapp": "+919004083384",
+    "email": "manager.rajasthan@mrkfoods.in",
+    "available": true
+  },
+  {
+    "id": "mgr_1772886282263_v63y",
+    "city": "Mumbai",
+    "manager": "Suraj Jadhav",
+    "card": "https://vcard-mrkfoods-mrk.vercel.app/card.html?id=BqXvcZ0B2Rn7RAYZIIqY",
+    "mobile": "+919833505114",
+    "whatsapp": "+919833505114",
+    "email": "suraj.jadhav@mrkfoods.in",
     "available": true
   }
 ]
