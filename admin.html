@@ -13,6 +13,16 @@
 </head>
 <body>
 
+<script>
+  (function () {
+    var pwd = prompt("🔒 Enter Admin Password:");
+    if (pwd !== "MRK@@2026") {
+      alert("⛔ Access Denied");
+      window.location.replace("index.html");
+    }
+  })();
+</script>
+
 <!-- ── Background ── -->
 <div class="bg-mesh" aria-hidden="true">
   <div class="mesh-blob blob-1"></div>
